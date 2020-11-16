@@ -1,0 +1,82 @@
+// Protocol messages for testing.
+
+syntax = "proto2";
+
+option go_package = "go.starlark.net/lib/proto/testdata/test";
+
+package test;
+
+message M {
+  optional bool bool = 1;
+  optional int32 int32 = 2;
+  optional uint32 uint32 = 3;
+  optional int64 int64 = 4;
+  optional uint64 uint64 = 5;
+  optional float float = 6;
+  optional double double = 7;
+  optional string string = 8;
+  optional bytes bytes = 9;
+  optional KeyValuePair kv = 10;
+  optional Inner inner = 11;
+  optional Outer outer = 12;
+  optional Coin coin = 13;
+
+  repeated bool bools = 31;
+  repeated int32 int32s = 32;
+  repeated int64 int64s = 33;
+  repeated uint32 uint32s = 34;
+  repeated uint64 uint64s = 35;
+  repeated float floats = 36;
+  repeated double doubles = 37;
+  repeated string strings = 38;
+  repeated bytes byteses = 39;
+  repeated KeyValuePair kvs = 40;
+  repeated Inner inners = 41;
+  repeated Outer outers = 42;
+  repeated Coin coins = 43;
+
+  message Inner {
+    optional int32 int32 = 1;
+    optional Inner inner = 2;
+  }
+
+  extensions 100 to 200;
+}
+
+enum Coin {
+  PENNY = 1;
+  NICKEL = 5;
+  DIME = 10;
+  QUARTER = 25;
+}
+
+enum Suit {
+  SPADES = 1;
+  HEARTS = 2;
+  DIAMONDS = 3;
+  CLUBS = 4;
+}
+
+message KeyValuePair {
+  optional string key = 1;
+  optional string value = 2;
+}
+
+extend M {
+  optional int32 ext = 100;  // M has a test.ext field
+}
+
+message Outer {
+  extend M {
+    optional int32 ext = 101;  // M has an test.Outer.ext field
+  }
+}
+
+// D has interesting defaults.
+message D {
+  optional bool bool = 1 [default = true];
+  optional int32 int32 = 2 [default = 123];
+  optional float float = 3 [default = 1.25];
+  optional string string = 4 [default = "hello"];
+  optional Coin coin = 5 [default = QUARTER];
+}

@@ -1,0 +1,99 @@
+// Copyright 2020 The Bazel Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
+// Proto API for a hypothetical bug tracker---an example for testing.
+//
+// TODO(adonovan): test:
+// - oneof, map, group.
+
+syntax = "proto2";
+
+option go_package = "go.starlark.net/lib/proto/testdata/bugtracker";
+
+package bugtracker;
+
+enum Status {
+  NEW = 0;
+  ASSIGNED = 1;
+  ACCEPTED = 2;
+  FIXED = 3;
+  WONTFIX = 5;
+}
+
+enum Type {
+  BUG = 0;
+  FEATURE = 1;
+  OTHER = 2;
+}
+
+message Issue {
+  required int64 id = 1;
+  optional string category = 2;
+  optional Status status = 3;
+  optional string reporter = 4;
+  optional string assignee = 5;
+  optional string verifier = 6;
+  repeated string cc = 7;
+  optional Type type = 8;
+  optional int32 priority = 9;
+  optional uint32 severity = 10;
+  repeated string note = 11;
+  repeated KeyValuePair metadata = 12;
+
+  message Nested {
+    optional string x = 1;
+    optional Nested y = 2;
+  }
+  optional Nested nested = 13;
+  optional float score = 14;
+
+  extensions 100 to 200;
+}
+
+extend Issue {
+  optional int32 ext = 100;  // Issue has a buganizer.ext field
+}
+
+message KeyValuePair {
+  optional string key = 1;
+  optional string value = 2;
+}
+
+message Outer {
+  extend Issue {
+    optional int32 ext = 101;  // Issue has an buganizer.Outer.ext field
+  }
+}
+
+message AllTypes {
+  optional bool bool = 1;
+  optional int32 int32 = 2;
+  optional uint32 uint32 = 3;
+  optional int64 int64 = 4;
+  optional uint64 uint64 = 7;
+  optional float float = 8;
+  optional double double = 9;
+  optional string string = 10;
+  optional bytes bytes = 11;
+  optional Status status = 12;
+  optional Inner inner = 13;
+  optional Outer outer = 14;
+
+  repeated bool bools = 31;
+  repeated int32 int32s = 33;
+  repeated int64 int64s = 34;
+  repeated uint32 uint32s = 36;
+  repeated uint64 uint64s = 37;
+  repeated float floats = 38;
+  repeated double doubles = 39;
+  repeated string strings = 40;
+  repeated bytes byteses = 41;
+  repeated Status statuses = 42;
+  repeated Inner inners = 43;
+  repeated Outer outers = 44;
+
+  message Inner {
+    optional int32 x = 1;
+  }
+}
